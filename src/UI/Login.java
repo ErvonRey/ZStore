@@ -155,9 +155,10 @@ public class Login extends javax.swing.JFrame {
             message.append("   if somehow it still doesnt work, please download the mysql jar file on the official website [https://www.mysql.com/products/connector/]\n");
             message.append("   select JDBC Driver for MySQL -> Platform Independent -> select .zip -> extract it -> then add the jar file to the Libraries\n");
             message.append("2. Your MySQL server is running.\n");
-            message.append("3. The URL, USER, and PASSWORD variable on the DBConnection class aligns with your database\n");
+            message.append("3. The database export has been successfully imported on your unit.\n");
+            message.append("4. The URL, USER, and PASSWORD variable on the DBConnection class aligns with your database\n");
             System.out.println("Check the DBConnection class and see if the variables; URL, USER, PASSWORD is correct with your database po.");
-            message.append("4. The username and password in my DBConnection class in getConnection method.\n");
+            message.append("5. The username and password in my DBConnection class in getConnection method.\n");
             message.append("   - aligns with your username and password on your mysql application.\n\n");
             message.append("Note from us: If there is still an error regarding the connection of the database\n");
             message.append("    Please don't hesitate to message us po, we will surely make it work.\n\n");
