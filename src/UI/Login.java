@@ -1,7 +1,9 @@
 package UI;
 
+import DatabaseConnection.DBConnection;
 import User.Data;
 import User.ManageUser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,6 +18,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        checkDBConnection();
     }
 
     /**
@@ -133,6 +136,47 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void checkDBConnection() {
+        if (DBConnection.getConnection() == null) {
+            
+            StringBuilder message = new StringBuilder();
+            
+            message.append("Unable to connect to the MySQL database!\n\n");
+            message.append("Please make sure:\n");
+            message.append("1. You have added the MySQL Connector / JAR file to the project.\n");
+            message.append("   - In NetBeans: Press the '>' icon on the left of the project name\n");
+            message.append("        -> right-click Libraries -> ADD JAR/Folder -> select the mysql jar file\n");
+            message.append("   I will provide the jar file in the folder \"Important Files\"\n");
+            message.append("   if somehow it still doesnt work, please download the mysql jar file on the official website [https://www.mysql.com/products/connector/]\n");
+            message.append("   select JDBC Driver for MySQL -> Platform Independent -> select .zip -> extract it -> then add the jar file to the Libraries\n");
+            message.append("2. Your MySQL server is running.\n");
+            message.append("3. The URL, USER, and PASSWORD variable on the DBConnection class aligns with your database\n");
+            System.out.println("Check the DBConnection class and see if the variables; URL, USER, PASSWORD is correct with your database po.");
+            message.append("4. The username and password in my DBConnection class in getConnection method.\n");
+            message.append("   - aligns with your username and password on your mysql application.\n\n");
+            message.append("Note from us: If there is still an error regarding the connection of the database\n");
+            message.append("    Please don't hesitate to message us po, we will surely make it work.\n\n");
+            message.append("Do you want to test the connection again?");
+
+            int option = JOptionPane.showConfirmDialog(
+                null, 
+                message.toString(), 
+                "Database Connection Error", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+
+            if (option == JOptionPane.YES_OPTION) {
+                //retry connection so it wont be a hassle for maam Razel
+                if (DBConnection.getConnection() != null) {
+                    JOptionPane.showMessageDialog(null, "Connection successful!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Still unable to connect. Check your settings.");
+                }
+            }
+        }
+    }
+    
     private void lCreateAccountMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lCreateAccountMouseEntered
         lCreateAccount.setText("<html><u>" + "Create an account" + "</u></html>");
     }//GEN-LAST:event_lCreateAccountMouseEntered

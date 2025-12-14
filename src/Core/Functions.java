@@ -340,13 +340,5 @@ public class Functions {
             System.out.println("Error fetching customer data: " + e);
         }
     }
-    
-    public static void main(String[] args) {
-        
-        Functions function = new Functions();
-        
-        function.addUser("tofu", "tofu12345", 1, "Pedro F. Dela Cruz", "tofu12@gmail.com", "Quezon City, Philippines");
-        
-    }
 
 }

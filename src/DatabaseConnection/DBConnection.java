@@ -8,8 +8,11 @@ import java.sql.SQLException;
 public class DBConnection {
     
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/dbm_finalproject";
+                                //URL = "jdbc:mysql://(hostname):(port)/(schema_name)";
     private static final String USER = "ervonrey";
+                                //USER = "(the username of your mysql, common as root)"
     private static final String PASSWORD = "mellisaAdmin1023!";
+                                //PASSWORD = "(the password of your user, also common as root)"
     
     public static Connection getConnection(){
         
@@ -29,8 +32,8 @@ public class DBConnection {
         
     }
     
-    public static void main(String[] args) {
-        getConnection();
-    }
+//    public static void main(String[] args) {
+//        getConnection();
+//    }
     
 }
