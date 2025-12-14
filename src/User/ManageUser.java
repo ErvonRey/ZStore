@@ -13,20 +13,25 @@ public class ManageUser {
 
     private static int currentUserID;
     private static int currentCustomerID;
+    private static int currentClerkID;
     
     public static void setCurrentUserID(int userID){
         currentUserID = userID;
     }
-    
     public static void setCurrentCustomerID(int customerID){
         currentCustomerID = customerID;
     }
-    
+    public static void setCurrentClerkID(int clerkID){
+        currentClerkID = clerkID;
+    }
     public static int getCurrentUserID(){
         return currentUserID;
     }
     public static int getCurrentCustomerID(){
         return currentCustomerID;
+    }
+    public static int getCurrentClerkID(){
+        return currentClerkID;
     }
     
     public static void clearSession(){
@@ -99,7 +104,24 @@ public class ManageUser {
                 setCurrentCustomerID(result.getInt("customer_id"));
             }
         } catch (SQLException e) {
-            System.out.println("Error on database method(isUsernameDuplicated): " + e);
+            System.out.println("Error on database method(gettingCurrentCustomerID): " + e);
+        }
+    }
+    
+    public static void gettingCurrentClerkID(){
+        try (Connection connection = DBConnection.getConnection()) {
+            String SQLChecking = "SELECT clerk_id FROM clerks WHERE user_id = ?";
+            PreparedStatement checking = connection.prepareStatement(SQLChecking);
+            checking.setInt(1, ManageUser.getCurrentUserID());
+            ResultSet result = checking.executeQuery();
+            if (result.next()) {
+                setCurrentClerkID(result.getInt("clerk_id"));
+//                System.out.println("successful at getting clerk id"); //- it was a logic error lol
+//              This one is funny when debugging took me some time to realize i was setting
+//              up the clerk id into a customersID cuz i copied and pasted this, i was so confused LMAO
+            }
+        } catch (SQLException e) {
+            System.out.println("Error on database method(gettingCurrentClerkID): " + e);
         }
     }
 

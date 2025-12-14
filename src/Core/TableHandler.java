@@ -60,6 +60,134 @@ public class TableHandler {
         return model;
     }
     
+    public static DefaultTableModel getAdminUsersTable(){
+        
+        String[] columns = { "User ID", "Admin ID", "Name", "Email"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+        
+        try (Connection connection = DBConnection.getConnection()) {
+        
+        String sql = """
+            SELECT 
+                u.user_id,
+                a.admin_id,
+                a.adm_name,
+                a.adm_email
+            FROM users u
+            JOIN admins a ON a.user_id = u.user_id
+        """;
+
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int userID = rs.getInt("user_id");
+                int adminID = rs.getInt("admin_id");
+                String name = rs.getString("adm_name");
+                String email = rs.getString("adm_email");
+
+                model.addRow(new Object[]{
+                    userID,
+                    adminID,
+                    name,
+                    email
+                });
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error fetching order data: " + e);
+        }
+        
+        return model;
+    }
+    
+    public static DefaultTableModel getCustomerUsersTable(){
+        
+        String[] columns = { "User ID", "Customer ID", "Name", "Email", "Money Spent"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+        
+        try (Connection connection = DBConnection.getConnection()) {
+        
+        String sql = """
+            SELECT 
+                u.user_id,
+                c.customer_id,
+                c.cus_name,
+                c.cus_email,
+                SUM(o.order_total) AS money_spent
+            FROM users u
+            JOIN customers c ON c.user_id = u.user_id
+            LEFT JOIN orders o ON o.customer_id = c.customer_id
+            GROUP BY u.user_id, c.customer_id, c.cus_name, c.cus_email;
+        """;
+
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int userID = rs.getInt("user_id");
+                int customerID = rs.getInt("customer_id");
+                String name = rs.getString("cus_name");
+                String email = rs.getString("cus_email");
+                String moneySpent = rs.getString("money_spent");
+
+                model.addRow(new Object[]{
+                    userID,
+                    customerID,
+                    name,
+                    email,
+                    moneySpent
+                });
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error fetching order data: " + e);
+        }
+        
+        return model;
+    }
+    
+    public static DefaultTableModel getClerkUsersTable(){
+        
+        String[] columns = { "User ID", "Clerk ID", "Name", "Email"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+        
+        try (Connection connection = DBConnection.getConnection()) {
+        
+        String sql = """
+            SELECT 
+                u.user_id,
+                c.clerk_id,
+                c.cle_name,
+                c.cle_email
+            FROM users u
+            JOIN clerks c ON c.user_id = u.user_id
+        """;
+
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int userID = rs.getInt("user_id");
+                int clerkID = rs.getInt("clerk_id");
+                String name = rs.getString("cle_name");
+                String email = rs.getString("cle_email");
+
+                model.addRow(new Object[]{
+                    userID,
+                    clerkID,
+                    name,
+                    email
+                });
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error fetching order data: " + e);
+        }
+        
+        return model;
+    }
+    
     public static DefaultTableModel getProductTable(){
         String[] columns = { "Product ID", "Product Name", "Price"};
         DefaultTableModel model = new DefaultTableModel(columns, 0) {

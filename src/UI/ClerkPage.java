@@ -3,8 +3,10 @@ package UI;
 import Core.CartItem;
 import Core.Confirmation;
 import Core.Functions;
+import Core.RecordTransaction;
 import Core.TableHandler;
 import User.Data;
+import User.ManageUser;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +85,7 @@ public class ClerkPage extends javax.swing.JFrame {
 
         panelBG = new javax.swing.JPanel();
         panelTop = new javax.swing.JPanel();
+        lLogOut = new javax.swing.JLabel();
         lPageName = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         productList = new javax.swing.JTable();
@@ -129,6 +132,23 @@ public class ClerkPage extends javax.swing.JFrame {
 
         panelTop.setBackground(new java.awt.Color(204, 204, 204));
 
+        lLogOut.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lLogOut.setForeground(new java.awt.Color(0, 0, 0));
+        lLogOut.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lLogOut.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ImagePack/logout icon.png"))); // NOI18N
+        lLogOut.setText("Log-out");
+        lLogOut.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lLogOut.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lLogOutMouseClicked(evt);
+            }
+        });
+        lLogOut.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                lLogOutKeyPressed(evt);
+            }
+        });
+
         lPageName.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
         lPageName.setForeground(new java.awt.Color(0, 0, 0));
         lPageName.setText("Clerk Page");
@@ -140,12 +160,16 @@ public class ClerkPage extends javax.swing.JFrame {
             .addGroup(panelTopLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lPageName)
-                .addContainerGap(1375, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1155, Short.MAX_VALUE)
+                .addComponent(lLogOut)
+                .addGap(122, 122, 122))
         );
         panelTopLayout.setVerticalGroup(
             panelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTopLayout.createSequentialGroup()
-                .addComponent(lPageName, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lLogOut)
+                    .addComponent(lPageName, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 10, Short.MAX_VALUE))
         );
 
@@ -197,7 +221,7 @@ public class ClerkPage extends javax.swing.JFrame {
         lTotalPrice.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lTotalPrice.setForeground(new java.awt.Color(102, 255, 102));
         lTotalPrice.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lTotalPrice.setText("00.00");
+        lTotalPrice.setText("₱ 00.00");
         panelBG.add(lTotalPrice);
         lTotalPrice.setBounds(1080, 100, 190, 30);
 
@@ -562,26 +586,56 @@ public class ClerkPage extends javax.swing.JFrame {
         updateCartTotals();
     }//GEN-LAST:event_basketTablePropertyChange
 
-    public void checkOut(){
+    public void checkOut(int clerkID, int customerID, double totalPrice){
         //rest muna here is the last code
+        RecordTransaction record = new RecordTransaction();
+        record.addOrder(customerID, clerkID, totalPrice);
+        for (CartItem item : cart) {
+            record.addOrderItem(
+                item.getProductId(),
+                item.getQuantity()
+            );
+        }
         
+        cart.clear(); //clears the arraylist of CartItem
+        
+        //refresh
+        refreshCartTable();
+        loadProductTable();
+        int totalQuantity = 0;
+        int tempPrice = 0;
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+        lTotalPrice.setText("₱ " + df.format(tempPrice));
+        lTotalQuantity.setText(String.valueOf(totalQuantity));
     }
     
     private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
+        
+        if (tfCheckoutCustomer.getText().trim().isEmpty() ||
+            tfCash.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Please fill up the necessary information.");
+            return;
+        }
+        
         int customerID = Integer.parseInt(tfCheckoutCustomer.getText().trim());
+        int clerkID = ManageUser.getCurrentClerkID();
+        double cash = Double.parseDouble(tfCash.getText().trim());
+        
         if (confirm.isCustomerExisting(customerID) == false){
             JOptionPane.showMessageDialog(null, "Customer with that ID does not exist.");
             return;
         }
+        
         if (!tfCash.getText().trim().isEmpty()){
             try {
                 double totalPrice = 0;
-                double cash = Double.parseDouble(tfCash.getText().trim());
+                
                 for (CartItem item : cart) {
                     totalPrice += item.getPrice() * item.getQuantity();
                 }
                 if (cash >= totalPrice) {
-                    checkOut();
+                    checkOut(clerkID, customerID, totalPrice);
                 } else {
                     JOptionPane.showMessageDialog(null, "Insufficient cash amount.");
                 }
@@ -590,7 +644,23 @@ public class ClerkPage extends javax.swing.JFrame {
                 tfCash.setText("0");
             }
         }
+        
+        tfCheckoutCustomer.setText("");
+        tfCustomerID.setText("");
+        tfQuantity.setText("");
+        tfCash.setText("");
     }//GEN-LAST:event_btnCheckoutActionPerformed
+
+    private void lLogOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lLogOutMouseClicked
+        ManageUser.clearSession();
+        Login login = new Login();
+        login.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_lLogOutMouseClicked
+
+    private void lLogOutKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lLogOutKeyPressed
+
+    }//GEN-LAST:event_lLogOutKeyPressed
 
     /**
      * @param args the command line arguments
@@ -632,6 +702,7 @@ public class ClerkPage extends javax.swing.JFrame {
     private javax.swing.JLabel lCheckoutCustomerID;
     private javax.swing.JLabel lClerk;
     private javax.swing.JLabel lCurrentClerk;
+    private javax.swing.JLabel lLogOut;
     private javax.swing.JLabel lPageName;
     private javax.swing.JLabel lPriceItem;
     private javax.swing.JLabel lProceedCheckout;

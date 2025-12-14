@@ -57,12 +57,26 @@ public class Data {
             System.out.println("Error on method fetchInformation: " + e);
         }
         
-        switch (role) {
+        switch (getRole()) {
+            case 0 -> {
+                try (Connection connection = DBConnection.getConnection()){
+                    String fetchCustomerSQL = "SELECT * FROM customers WHERE user_id = ?";
+                    PreparedStatement ps = connection.prepareStatement(fetchCustomerSQL);
+                    ps.setInt(1, userID);
+                    ResultSet rs = ps.executeQuery();
+                    if (rs.next()){
+                        setName(rs.getString("cus_name"));
+                        setEmail(rs.getString("cus_email"));
+                        setAddress(rs.getString("cus_address"));
+                    }
+                } catch (SQLException e) { System.out.println("Error on method fetchCustomer: " + e); }
+            
+            }
             case 1 -> {
                 try (Connection connection = DBConnection.getConnection()){
                     String fetchCustomerSQL = "SELECT * FROM customers WHERE user_id = ?";
                     PreparedStatement ps = connection.prepareStatement(fetchCustomerSQL);
-                    ps.setInt(1, ManageUser.getCurrentUserID());
+                    ps.setInt(1, userID);
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()){
                         setName(rs.getString("cus_name"));
@@ -75,7 +89,7 @@ public class Data {
                 try (Connection connection = DBConnection.getConnection()){
                     String fetchClerkSQL = "SELECT * FROM clerks WHERE user_id = ?";
                     PreparedStatement ps = connection.prepareStatement(fetchClerkSQL);
-                    ps.setInt(1, ManageUser.getCurrentUserID());
+                    ps.setInt(1, userID);
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()){
                         setName(rs.getString("cle_name"));
@@ -88,7 +102,7 @@ public class Data {
                 try (Connection connection = DBConnection.getConnection()){
                     String fetchClerkSQL = "SELECT * FROM admins WHERE user_id = ?";
                     PreparedStatement ps = connection.prepareStatement(fetchClerkSQL);
-                    ps.setInt(1, ManageUser.getCurrentUserID());
+                    ps.setInt(1, userID);
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()){
                         setName(rs.getString("adm_name"));

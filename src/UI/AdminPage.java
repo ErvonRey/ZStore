@@ -1,5 +1,12 @@
 package UI;
 
+import Core.Functions;
+import Core.TableHandler;
+import User.Data;
+import User.ManageUser;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+
 /**
  *
  * @author Mellisa
@@ -13,6 +20,17 @@ public class AdminPage extends javax.swing.JFrame {
      */
     public AdminPage() {
         initComponents();
+        loadData();
+    }
+    
+    private void loadData(){
+        Data.fetchInformation(ManageUser.getCurrentUserID());
+        
+        lName.setText(Data.getName());
+        lEmail.setText(Data.getEmail());
+        lAddress.setText(Data.getAddress());
+        
+        
     }
 
     /**
@@ -27,6 +45,30 @@ public class AdminPage extends javax.swing.JFrame {
         panelBG = new javax.swing.JPanel();
         panelTop = new javax.swing.JPanel();
         lPageName = new javax.swing.JLabel();
+        lNameText = new javax.swing.JLabel();
+        lEmail = new javax.swing.JLabel();
+        lAddress = new javax.swing.JLabel();
+        lAddressText = new javax.swing.JLabel();
+        lEmailText = new javax.swing.JLabel();
+        lName = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        users = new javax.swing.JTable();
+        btnSeeClerks = new javax.swing.JButton();
+        btnSeeAdmins = new javax.swing.JButton();
+        btnSeeCustomers = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        lRoleInformation = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        tfAddress = new javax.swing.JTextField();
+        tfUserID = new javax.swing.JTextField();
+        tfEmail = new javax.swing.JTextField();
+        rbSeePassword = new javax.swing.JRadioButton();
+        tfPassword = new javax.swing.JPasswordField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        tfName = new javax.swing.JTextField();
+        btnUpdateClerk = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Admin Page");
@@ -36,6 +78,7 @@ public class AdminPage extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(1620, 800));
 
         panelBG.setBackground(new java.awt.Color(255, 255, 255));
+        panelBG.setEnabled(false);
         panelBG.setLayout(null);
 
         panelTop.setBackground(new java.awt.Color(204, 204, 204));
@@ -63,6 +106,184 @@ public class AdminPage extends javax.swing.JFrame {
         panelBG.add(panelTop);
         panelTop.setBounds(0, 0, 1620, 80);
 
+        lNameText.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lNameText.setForeground(new java.awt.Color(0, 0, 0));
+        lNameText.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lNameText.setText("Name:");
+        panelBG.add(lNameText);
+        lNameText.setBounds(10, 90, 80, 32);
+
+        lEmail.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lEmail.setForeground(new java.awt.Color(0, 0, 0));
+        lEmail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lEmail.setText("email of user");
+        panelBG.add(lEmail);
+        lEmail.setBounds(570, 90, 600, 32);
+
+        lAddress.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lAddress.setForeground(new java.awt.Color(0, 0, 0));
+        lAddress.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lAddress.setText("address of user");
+        panelBG.add(lAddress);
+        lAddress.setBounds(1070, 90, 520, 32);
+
+        lAddressText.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lAddressText.setForeground(new java.awt.Color(0, 0, 0));
+        lAddressText.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lAddressText.setText("Address:");
+        panelBG.add(lAddressText);
+        lAddressText.setBounds(940, 90, 120, 32);
+
+        lEmailText.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lEmailText.setForeground(new java.awt.Color(0, 0, 0));
+        lEmailText.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lEmailText.setText("Email:");
+        panelBG.add(lEmailText);
+        lEmailText.setBounds(440, 90, 120, 32);
+
+        lName.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lName.setForeground(new java.awt.Color(0, 0, 0));
+        lName.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lName.setText("name of user");
+        panelBG.add(lName);
+        lName.setBounds(100, 90, 390, 32);
+
+        users.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "User ID", "Unique ID", "Name", "Email"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        users.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                usersMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(users);
+
+        panelBG.add(jScrollPane1);
+        jScrollPane1.setBounds(20, 140, 790, 580);
+
+        btnSeeClerks.setText("List of Clerks");
+        btnSeeClerks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSeeClerksActionPerformed(evt);
+            }
+        });
+        panelBG.add(btnSeeClerks);
+        btnSeeClerks.setBounds(310, 730, 160, 30);
+
+        btnSeeAdmins.setText("List of Admins");
+        btnSeeAdmins.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSeeAdminsActionPerformed(evt);
+            }
+        });
+        panelBG.add(btnSeeAdmins);
+        btnSeeAdmins.setBounds(130, 730, 160, 30);
+
+        btnSeeCustomers.setText("List of Customers");
+        btnSeeCustomers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSeeCustomersActionPerformed(evt);
+            }
+        });
+        panelBG.add(btnSeeCustomers);
+        btnSeeCustomers.setBounds(490, 730, 160, 30);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("Password:");
+        panelBG.add(jLabel1);
+        jLabel1.setBounds(920, 330, 100, 40);
+
+        lRoleInformation.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lRoleInformation.setForeground(new java.awt.Color(0, 0, 0));
+        lRoleInformation.setText("(Role) Information:");
+        panelBG.add(lRoleInformation);
+        lRoleInformation.setBounds(910, 140, 520, 30);
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Email:");
+        panelBG.add(jLabel3);
+        jLabel3.setBounds(960, 250, 60, 30);
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel4.setText("User ID:");
+        panelBG.add(jLabel4);
+        jLabel4.setBounds(950, 170, 67, 30);
+
+        tfAddress.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        tfAddress.setEnabled(false);
+        panelBG.add(tfAddress);
+        tfAddress.setBounds(1030, 290, 350, 30);
+
+        tfUserID.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        tfUserID.setEnabled(false);
+        panelBG.add(tfUserID);
+        tfUserID.setBounds(1030, 170, 350, 30);
+
+        tfEmail.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        tfEmail.setEnabled(false);
+        panelBG.add(tfEmail);
+        tfEmail.setBounds(1030, 250, 350, 30);
+
+        rbSeePassword.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbSeePasswordItemStateChanged(evt);
+            }
+        });
+        panelBG.add(rbSeePassword);
+        rbSeePassword.setBounds(1350, 330, 30, 40);
+
+        tfPassword.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        tfPassword.setEnabled(false);
+        panelBG.add(tfPassword);
+        tfPassword.setBounds(1030, 330, 350, 40);
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel5.setText("Address:");
+        panelBG.add(jLabel5);
+        jLabel5.setBounds(940, 290, 80, 30);
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setText("Name:");
+        panelBG.add(jLabel6);
+        jLabel6.setBounds(960, 210, 60, 30);
+
+        tfName.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        tfName.setEnabled(false);
+        panelBG.add(tfName);
+        tfName.setBounds(1030, 210, 350, 30);
+
+        btnUpdateClerk.setText("Update User");
+        btnUpdateClerk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateClerkActionPerformed(evt);
+            }
+        });
+        panelBG.add(btnUpdateClerk);
+        btnUpdateClerk.setBounds(1030, 420, 350, 40);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -77,6 +298,150 @@ public class AdminPage extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSeeAdminsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeeAdminsActionPerformed
+        users.setModel(TableHandler.getAdminUsersTable());
+        users.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        users.setRowSelectionAllowed(true);
+        users.setColumnSelectionAllowed(false);
+    }//GEN-LAST:event_btnSeeAdminsActionPerformed
+
+    private void btnSeeClerksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeeClerksActionPerformed
+        // TODO add your handling code here:
+        users.setModel(TableHandler.getClerkUsersTable());
+        users.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        users.setRowSelectionAllowed(true);
+        users.setColumnSelectionAllowed(false);
+    }//GEN-LAST:event_btnSeeClerksActionPerformed
+
+    private void btnSeeCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeeCustomersActionPerformed
+        // TODO add your handling code here:
+        users.setModel(TableHandler.getCustomerUsersTable());
+        users.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        users.setRowSelectionAllowed(true);
+        users.setColumnSelectionAllowed(false);
+    }//GEN-LAST:event_btnSeeCustomersActionPerformed
+
+    private void rbSeePasswordItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSeePasswordItemStateChanged
+        if (rbSeePassword.isSelected()) {
+            tfPassword.setEchoChar((char) 0);
+        } else {
+            tfPassword.setEchoChar('*');
+        }
+    }//GEN-LAST:event_rbSeePasswordItemStateChanged
+
+    private void usersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usersMouseClicked
+        int selectedRow = users.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a user first!");
+            tfName.setText("");
+            tfEmail.setText("");
+            tfAddress.setText("");
+            tfPassword.setText("");
+            return;
+        }
+        //grab data directly from the selected row
+        int selectedUser = (int) users.getValueAt(selectedRow, 0); //user_id
+        
+        //set the userID to the not enabled field
+        tfUserID.setText(Integer.toString(selectedUser));
+        
+        Data.fetchInformation(selectedUser);
+        
+        if(Data.getUsername() == null && Data.getRole() == 0){
+            lRoleInformation.setText("User deleted their account.");
+            tfName.setText(Data.getName());
+            tfEmail.setText(Data.getEmail());
+            tfAddress.setText(Data.getAddress());
+            tfPassword.setText("User has deleted their account.");
+            
+            tfName.disable();
+            tfEmail.disable();
+            tfAddress.disable();
+            tfPassword.disable();
+        } else if (Data.getRole() == 1){
+            lRoleInformation.setText("Customer Information:");
+            tfName.enable();
+            tfEmail.enable();
+            tfAddress.enable();
+            tfPassword.disable();
+            
+            tfName.setText(Data.getName());
+            tfEmail.setText(Data.getEmail());
+            tfAddress.setText(Data.getAddress());
+            tfPassword.setText("Unable to see their password");
+        } else if (Data.getRole() == 2){
+            lRoleInformation.setText("Clerk Information:");
+            tfName.enable();
+            tfEmail.enable();
+            tfAddress.enable();
+            tfPassword.enable();
+            
+            tfName.setText(Data.getName());
+            tfEmail.setText(Data.getEmail());
+            tfAddress.setText(Data.getAddress());
+            tfPassword.setText(Data.getPassword());
+        } else if (Data.getRole() == 3){
+            lRoleInformation.setText("Admin Information:");
+            tfName.enable();
+            tfEmail.enable();
+            tfAddress.enable();
+            tfPassword.enable();
+            
+            tfName.setText(Data.getName());
+            tfEmail.setText(Data.getEmail());
+            tfAddress.setText(Data.getAddress());
+            tfPassword.setText(Data.getPassword());
+        } else {
+            tfName.enable();
+            tfEmail.enable();
+            tfAddress.enable();
+            tfPassword.enable();
+            
+            tfName.setText("");
+            tfEmail.setText("");
+            tfAddress.setText("");
+            tfPassword.setText("");
+        }
+    }//GEN-LAST:event_usersMouseClicked
+
+    private void btnUpdateClerkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateClerkActionPerformed
+        int userID;
+        String name;
+        String email;
+        String address;
+        String password;
+        
+        userID = Integer.parseInt(tfUserID.getText());
+        name = tfName.getText().trim();
+        email = tfEmail.getText().trim();
+        address = tfAddress.getText().trim();
+        password = tfPassword.getText().trim();
+        
+        Data.fetchInformation(userID);
+        Functions function = new Functions();
+        
+        switch(Data.getRole()){
+            case 0 -> {
+                JOptionPane.showMessageDialog(null, "Unable to update deleted user.");
+                return;
+            }
+            case 1 -> {
+                JOptionPane.showMessageDialog(null, "You are not allowed to update customers.");
+                return;
+            }
+            case 2 -> {
+                function.updateClerk(name, email, address);
+            }
+            case 3 -> {
+                function.updateAdmin(name, email, address);
+            }
+        }
+        
+        function.updateUser(userID, password);
+        JOptionPane.showMessageDialog(null, "Successfully updated selected user's information.");
+    }//GEN-LAST:event_btnUpdateClerkActionPerformed
 
     /**
      * @param args the command line arguments
@@ -104,8 +469,32 @@ public class AdminPage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSeeAdmins;
+    private javax.swing.JButton btnSeeClerks;
+    private javax.swing.JButton btnSeeCustomers;
+    private javax.swing.JButton btnUpdateClerk;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lAddress;
+    private javax.swing.JLabel lAddressText;
+    private javax.swing.JLabel lEmail;
+    private javax.swing.JLabel lEmailText;
+    private javax.swing.JLabel lName;
+    private javax.swing.JLabel lNameText;
     private javax.swing.JLabel lPageName;
+    private javax.swing.JLabel lRoleInformation;
     private javax.swing.JPanel panelBG;
     private javax.swing.JPanel panelTop;
+    private javax.swing.JRadioButton rbSeePassword;
+    private javax.swing.JTextField tfAddress;
+    private javax.swing.JTextField tfEmail;
+    private javax.swing.JTextField tfName;
+    private javax.swing.JPasswordField tfPassword;
+    private javax.swing.JTextField tfUserID;
+    private javax.swing.JTable users;
     // End of variables declaration//GEN-END:variables
 }

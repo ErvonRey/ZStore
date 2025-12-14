@@ -248,6 +248,10 @@ public class SignUp extends javax.swing.JFrame {
         };
         
         function.addUser(username, password, role, name, email, address);
+        Login login = new Login();
+        login.setVisible(true);
+        this.dispose();
+        
     }//GEN-LAST:event_btnCreateAccountActionPerformed
 
     /**

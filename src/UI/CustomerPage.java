@@ -94,6 +94,7 @@ public class CustomerPage extends javax.swing.JFrame {
         btnUpdateAccount = new javax.swing.JButton();
         lMoneySpent = new javax.swing.JLabel();
         lText4 = new javax.swing.JLabel();
+        btnDeletePurchases = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Customer Page");
@@ -273,7 +274,7 @@ public class CustomerPage extends javax.swing.JFrame {
             }
         });
         panelBG.add(btnDeleteAccount);
-        btnDeleteAccount.setBounds(1170, 530, 210, 40);
+        btnDeleteAccount.setBounds(1040, 530, 210, 40);
 
         btnRefresh.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnRefresh.setText("Refresh Table");
@@ -283,7 +284,7 @@ public class CustomerPage extends javax.swing.JFrame {
             }
         });
         panelBG.add(btnRefresh);
-        btnRefresh.setBounds(1170, 580, 210, 40);
+        btnRefresh.setBounds(1290, 480, 230, 40);
 
         btnUpdateAccount.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnUpdateAccount.setText("Update Account");
@@ -293,7 +294,7 @@ public class CustomerPage extends javax.swing.JFrame {
             }
         });
         panelBG.add(btnUpdateAccount);
-        btnUpdateAccount.setBounds(1170, 480, 210, 40);
+        btnUpdateAccount.setBounds(1040, 480, 210, 40);
 
         lMoneySpent.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lMoneySpent.setForeground(new java.awt.Color(102, 255, 102));
@@ -307,6 +308,16 @@ public class CustomerPage extends javax.swing.JFrame {
         lText4.setText("Address:");
         panelBG.add(lText4);
         lText4.setBounds(1040, 380, 80, 25);
+
+        btnDeletePurchases.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnDeletePurchases.setText("Delete Purchase History");
+        btnDeletePurchases.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletePurchasesActionPerformed(evt);
+            }
+        });
+        panelBG.add(btnDeletePurchases);
+        btnDeletePurchases.setBounds(1290, 530, 230, 40);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -343,8 +354,9 @@ public class CustomerPage extends javax.swing.JFrame {
         String email = tfEmail.getText().trim();
         String address = tfAddress.getText().trim();
         
-        function.updateUser(password);
+        function.updateUser(ManageUser.getCurrentUserID(), password);
         function.updateCustomer(name, email, address);
+        JOptionPane.showMessageDialog(null, "Successfully updated your information.");
     }//GEN-LAST:event_btnUpdateAccountActionPerformed
 
     private void btnDeleteAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAccountActionPerformed
@@ -356,7 +368,7 @@ public class CustomerPage extends javax.swing.JFrame {
             JOptionPane.WARNING_MESSAGE
         );
         if (result == JOptionPane.YES_OPTION) {
-            function.deleteAccount(); // your method
+            function.voidAccount(); // your method
             String message = "Successfully deleted your account.";
             JOptionPane.showMessageDialog(null, message, "Account Deletion", JOptionPane.INFORMATION_MESSAGE);
             Login login = new Login();
@@ -378,6 +390,25 @@ public class CustomerPage extends javax.swing.JFrame {
         login.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_lLogOutMouseClicked
+
+    private void btnDeletePurchasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletePurchasesActionPerformed
+        // TODO add your handling code here:
+        int result = JOptionPane.showConfirmDialog(
+            null, 
+            "Are you sure you want to delete your purchase history?", 
+            "Confirm Delete", 
+            JOptionPane.YES_NO_OPTION, 
+            JOptionPane.WARNING_MESSAGE
+        );
+        if (result == JOptionPane.YES_OPTION) {
+            function.deletePurchaseHistory(ManageUser.getCurrentCustomerID()); // your method
+            String message = "Successfully deleted your purchase history.";
+            JOptionPane.showMessageDialog(null, message, "Purchase History Deletion", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            String message = "Clearing of purchase history has been cancelled.";
+            JOptionPane.showMessageDialog(null, message, "Purchase History Deletion", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnDeletePurchasesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -406,6 +437,7 @@ public class CustomerPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDeleteAccount;
+    private javax.swing.JButton btnDeletePurchases;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnUpdateAccount;
     private javax.swing.JScrollPane jScrollPane1;

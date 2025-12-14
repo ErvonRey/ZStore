@@ -32,10 +32,11 @@ public class Login extends javax.swing.JFrame {
         lUsername = new javax.swing.JLabel();
         tfUsername = new javax.swing.JTextField();
         lPassword = new javax.swing.JLabel();
-        tfPassword = new javax.swing.JTextField();
+        rbSeePassword = new javax.swing.JRadioButton();
         btnLogin = new javax.swing.JToggleButton();
         lDontHaveAnAccount = new javax.swing.JLabel();
         lCreateAccount = new javax.swing.JLabel();
+        tfPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login Page");
@@ -71,9 +72,13 @@ public class Login extends javax.swing.JFrame {
         panelBG.add(lPassword);
         lPassword.setBounds(105, 170, 90, 25);
 
-        tfPassword.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        panelBG.add(tfPassword);
-        tfPassword.setBounds(105, 201, 500, 38);
+        rbSeePassword.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbSeePasswordItemStateChanged(evt);
+            }
+        });
+        panelBG.add(rbSeePassword);
+        rbSeePassword.setBounds(570, 210, 20, 20);
 
         btnLogin.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnLogin.setText("Login");
@@ -108,6 +113,10 @@ public class Login extends javax.swing.JFrame {
         });
         panelBG.add(lCreateAccount);
         lCreateAccount.setBounds(360, 307, 100, 16);
+
+        tfPassword.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        panelBG.add(tfPassword);
+        tfPassword.setBounds(110, 200, 490, 40);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -149,6 +158,9 @@ public class Login extends javax.swing.JFrame {
                     this.dispose();
                 }
                 case 2 -> {
+                    ManageUser.gettingCurrentClerkID();
+//                    System.out.println("Current Clerk ID: " + ManageUser.getCurrentClerkID());
+//                    System.out.println("Current User ID: " + ManageUser.getCurrentUserID());
                     ClerkPage clerk = new ClerkPage();
                     clerk.setExtendedState(ClerkPage.MAXIMIZED_BOTH);
                     clerk.setVisible(true);
@@ -169,6 +181,14 @@ public class Login extends javax.swing.JFrame {
         signUp.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_lCreateAccountMouseClicked
+
+    private void rbSeePasswordItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSeePasswordItemStateChanged
+        if (rbSeePassword.isSelected()) {
+            tfPassword.setEchoChar((char) 0);
+        } else {
+            tfPassword.setEchoChar('*');
+        }
+    }//GEN-LAST:event_rbSeePasswordItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -203,7 +223,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel lPassword;
     private javax.swing.JLabel lUsername;
     private javax.swing.JPanel panelBG;
-    private javax.swing.JTextField tfPassword;
+    private javax.swing.JRadioButton rbSeePassword;
+    private javax.swing.JPasswordField tfPassword;
     private javax.swing.JTextField tfUsername;
     // End of variables declaration//GEN-END:variables
 }

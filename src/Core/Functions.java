@@ -136,17 +136,15 @@ public class Functions {
     
     //--
     
-    public void updateUser(String password){
+    public void updateUser(int userID, String password){
         
         try (Connection connection = DBConnection.getConnection()){
             
             String updateSQL = "UPDATE users SET user_password = ? WHERE user_id = ?";
             PreparedStatement updateUser = connection.prepareStatement(updateSQL);
             updateUser.setString(1, password);
-            updateUser.setInt(2, ManageUser.getCurrentUserID());
+            updateUser.setInt(2, userID);
             updateUser.executeUpdate();
-            String message = "Successfully updated your account!";
-            JOptionPane.showMessageDialog(null, message, "Account Update", JOptionPane.INFORMATION_MESSAGE);
             
         } catch (SQLException e) {
             System.out.println("Error on method updateUser: " + e);
@@ -212,12 +210,14 @@ public class Functions {
     }    
     //-- delete
     
-    public void deleteAccount(){
+    public void voidAccount(){
         
         int currentID = ManageUser.getCurrentUserID();
         
         try (Connection connection = DBConnection.getConnection()) {
-            String usersDeleteSQL = "DELETE FROM users WHERE user_id = ?";
+            //SETTING THE FIELDS TO NULL INSTEAD OF REMOVING COMPLETELY
+            //TO AVOID DATA ANOMALIES WITH PURCHASE HISTORY
+            String usersDeleteSQL = "UPDATE users SET user_username = null, user_password = null, role_id = 0 WHERE user_id = ?";
             PreparedStatement usersDelete = connection.prepareStatement(usersDeleteSQL);
             usersDelete.setInt(1, currentID);
             usersDelete.executeUpdate();
@@ -225,6 +225,46 @@ public class Functions {
             ManageUser.clearSession();
             } catch (SQLException e) {
             System.out.println("Error on database method(deleteAccount): " + e.getMessage());
+        }
+    }
+    
+    public void resetOrderHistory(){
+        try (Connection connection = DBConnection.getConnection()) {
+            String ordersResetSQL = "TRUNCATE TABLE orders;";
+            String order_itemsResetSQL = "TRUNCATE TABLE order_items;";
+            PreparedStatement orders = connection.prepareStatement(ordersResetSQL);
+            PreparedStatement order_items = connection.prepareStatement(order_itemsResetSQL);
+            orders.executeUpdate();
+            order_items.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Successfully cleared history on transactions.");
+            } catch (SQLException e) {
+            System.out.println("Error on database method(deleteAccount): " + e.getMessage());
+        }
+    }
+    
+    public void deletePurchaseHistory(int customerID) {
+        try (Connection connection = DBConnection.getConnection()) {
+            //deleting order_items of this customer's orders first
+            String sqlItems = """
+                DELETE oi
+                FROM order_items oi
+                JOIN orders o ON oi.order_id = o.order_id
+                WHERE o.customer_id = ?;
+            """;
+            PreparedStatement psItems = connection.prepareStatement(sqlItems);
+            psItems.setInt(1, customerID);
+            psItems.executeUpdate();
+
+            //Deleting orders for this customer next the whole stuff
+            String sqlOrders = "DELETE FROM orders WHERE customer_id = ?;";
+            PreparedStatement psOrders = connection.prepareStatement(sqlOrders);
+            psOrders.setInt(1, customerID);
+            psOrders.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Successfully deleted history of customer ID: " + customerID);
+
+        } catch (SQLException e) {
+            System.out.println("Error on database method(clearPurchaseHistory): " + e.getMessage());
         }
     }
     
