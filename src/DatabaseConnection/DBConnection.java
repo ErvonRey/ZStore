@@ -20,7 +20,7 @@ public class DBConnection {
         
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
-//            System.out.println("Connected Successfully");
+//            System.out.println("Connected Successfully"); //debugging line
         } catch (SQLException e) {
             
             e.printStackTrace();
@@ -31,9 +31,5 @@ public class DBConnection {
         return connection;
         
     }
-    
-//    public static void main(String[] args) {
-//        getConnection();
-//    }
-    
+ 
 }

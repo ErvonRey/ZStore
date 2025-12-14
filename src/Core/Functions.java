@@ -11,8 +11,20 @@ import javax.swing.JOptionPane;
 
 public class Functions {
     
+    /*
+        This is the main functions for creating, updating, searching, and deleting any row on
+        the database which is crucial since this is a system and must need to handle data.
+    */
+    
+    //In order to update or create data it needs confirmation to see if theres any duplicates
+    //that is why Confirmation class is called here. Encapsulation too btw
     Confirmation confirm = new Confirmation();
     
+    /*
+        This method is to generate user's ID so that it wont have duplicates and this was
+        taught by sir Ivan back at first year. which is important since we can control the
+        increment of the IDs.
+    */
     private void generateUserID(){
         
         try (Connection connection = DBConnection.getConnection()) {
@@ -30,9 +42,10 @@ public class Functions {
             System.out.println("Error on database method(autoIncrement userID): " + e.getMessage());
         }
     }
+    // <editor-fold defaultstate="collapsed" desc="Sample">
+    // </editor-fold>
     
-    //INSERT METHODS
-    
+    // <editor-fold defaultstate="collapsed" desc="Methods for CREATING rows or data for the database">
     public void addUser(String username, String password, int role, String name, String email, String address){
         
         generateUserID();
@@ -133,9 +146,9 @@ public class Functions {
             System.out.println("Error on method addAdmin: " + e);
         }
     }
+    // </editor-fold>
     
-    //--
-    
+    // <editor-fold defaultstate="collapsed" desc="Methods for UPDATING data on the database">
     public void updateUser(int userID, String password){
         
         try (Connection connection = DBConnection.getConnection()){
@@ -208,8 +221,9 @@ public class Functions {
             System.out.println("Error on method updateProduct: " + e);
         }
     }    
-    //-- delete
+    // </editor-fold>
     
+    // <editor-fold defaultstate="collapsed" desc="Methods for DELETING stuff or RESETTING tables while keeping its fields">
     public void voidAccount(){
         
         int currentID = ManageUser.getCurrentUserID();
@@ -267,7 +281,9 @@ public class Functions {
             System.out.println("Error on database method(clearPurchaseHistory): " + e.getMessage());
         }
     }
+    // </editor-fold>
     
+    // <editor-fold defaultstate="collapsed" desc="Methods for SEARCHING data on the database">
     public void searchCustomer(String customerName){
         
         try (Connection connection = DBConnection.getConnection()) {
@@ -340,5 +356,6 @@ public class Functions {
             System.out.println("Error fetching customer data: " + e);
         }
     }
+    // </editor-fold>
 
 }

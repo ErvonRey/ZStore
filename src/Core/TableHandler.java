@@ -1,7 +1,6 @@
 package Core;
 
 //import here:
-
 import DatabaseConnection.DBConnection;
 import User.ManageUser;
 import java.sql.Connection;
@@ -9,10 +8,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.table.DefaultTableModel;
 
-
+/*
+    This class is for the DefaultTableModel, so we can handle the gathering of the data
+    and pass it through the DefaultTableModel so it can be called and the model could be referenced.
+*/
 
 public class TableHandler {
 
+    //This is for fetching and setting up the model for the purchase list of the customer
     public static DefaultTableModel getCustomerPurchaseTable(){
         
         String[] columns = { "Order Date", "Order ID", "Product Name", "Quantity", "Price" };
@@ -60,6 +63,7 @@ public class TableHandler {
         return model;
     }
     
+    //this is for returning a table model with all the admins listed on the database
     public static DefaultTableModel getAdminUsersTable(){
         
         String[] columns = { "User ID", "Admin ID", "Name", "Email"};
@@ -101,6 +105,7 @@ public class TableHandler {
         return model;
     }
     
+    //similar to the getAdminUsersTable(), but for customers.
     public static DefaultTableModel getCustomerUsersTable(){
         
         String[] columns = { "User ID", "Customer ID", "Name", "Email", "Money Spent"};
@@ -147,6 +152,7 @@ public class TableHandler {
         return model;
     }
     
+    //similar to the getAdminUsersTable(), and the getCustomerUsersTable() but for the clerk.
     public static DefaultTableModel getClerkUsersTable(){
         
         String[] columns = { "User ID", "Clerk ID", "Name", "Email"};
@@ -188,6 +194,7 @@ public class TableHandler {
         return model;
     }
     
+    //this is for returning a table model with all the products available on the database
     public static DefaultTableModel getProductTable(){
         String[] columns = { "Product ID", "Product Name", "Price"};
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
@@ -236,35 +243,11 @@ public class TableHandler {
         return model;
     }
     
-    public static DefaultTableModel getSearchedProduct(int productID) {
-        
-        try (Connection connection = DBConnection.getConnection()) {
-
-            String sql = """
-                SELECT * FROM products
-                WHERE product_id = ?;
-            """;
-
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, productID);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) { //if product ID exist then get its name then return it to clerk
-                String productName = rs.getString("prod_name");
-                return getSearchedProduct(productName);
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error fetching product by ID: " + e);
-        }
-        
-        //returns nothing since not found
-        return new DefaultTableModel(
-        new String[]{"Product ID", "Product Name", "Price"}, 
-        0
-    );
-    }
-    
+    /*
+        This method returns the searched product via Product Name and the below this method has the same
+        method name but with the different data type. This demonstrates polymorphism, specifically;
+        method overloading, not overriding. Since it has the same method name but different datatype parameters.
+    */
     public static DefaultTableModel getSearchedProduct(String searchProduct){
         
         String[] columns = { "Product ID", "Product Name", "Price"};
@@ -272,6 +255,8 @@ public class TableHandler {
         
         try (Connection connection = DBConnection.getConnection()) {
         
+        //returns products whose names contain the search string,
+        //similar to Java's variable.matches("") but in SQL.
         String sql = """
             SELECT * FROM products
             WHERE prod_name LIKE CONCAT('%', ?, '%');
@@ -299,5 +284,35 @@ public class TableHandler {
         
         return model;
     }
+    
+    //same method name but different datatype in the parameter
+    //search via ID but will return to the getSearchedProduct(productName) method.
+    public static DefaultTableModel getSearchedProduct(int productID) {
+        
+        try (Connection connection = DBConnection.getConnection()) {
 
+            String sql = """
+                SELECT * FROM products
+                WHERE product_id = ?;
+            """;
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) { //if product ID exist then get its name then return it to clerk
+                String productName = rs.getString("prod_name");
+                return getSearchedProduct(productName);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error fetching product by ID: " + e);
+        }
+        
+        //returns nothing since not found
+        return new DefaultTableModel(
+        new String[]{"Product ID", "Product Name", "Price"}, 
+        0
+        );
+    }
 }

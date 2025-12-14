@@ -1,15 +1,20 @@
 package Core;
 
-//import here:
-
-
 public class CartItem {
+    
+    /*
+        This class is a valid example of encapsulation. Since it is storing the values and hiding
+        the information such as the productID, productName, price, and quantity. It wont allow any
+        connection since it is made private. Can only be accessed through setters and getters.
+    */
 
+    //variables
     private int productId;
     private String productName;
     private double price;
     private int quantity;
-
+    
+    //the constructor to store the information of the item
     public CartItem(int productId, String productName, double price, int quantity) {
         this.productId = productId;
         this.productName = productName;

@@ -1,5 +1,6 @@
 package UI;
 
+import Core.Confirmation;
 import Core.Functions;
 import User.ManageUser;
 import javax.swing.JOptionPane;
@@ -19,7 +20,10 @@ public class SignUp extends javax.swing.JFrame {
         initComponents();
     }
     
+    //calls the function and confirmation since the user will create a new account.
+    //Encapsulation still.
     private Functions function = new Functions();
+    private Confirmation confirmation = new Confirmation();
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -196,6 +200,7 @@ public class SignUp extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    //Sign-in form or login form if user click the label
     private void lSignInMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lSignInMouseClicked
         Login login = new Login();
         login.setVisible(true);
@@ -210,6 +215,7 @@ public class SignUp extends javax.swing.JFrame {
         lSignIn.setText("Sign-in");
     }//GEN-LAST:event_lSignInMouseExited
 
+    //confirms if all the fields are selected.
     private boolean isFieldValid(){
         if (tfUsername.getText().trim().isEmpty() || tfPassword.getText().trim().isEmpty() || tfName.getText().trim().isEmpty() ||
            tfEmail.getText().trim().isEmpty() || tfAddress.getText().trim().isEmpty()){
@@ -219,6 +225,7 @@ public class SignUp extends javax.swing.JFrame {
         return true;
     }
     
+    //creates the account
     private void btnCreateAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateAccountActionPerformed
         
         if (isFieldValid() == false){
@@ -243,7 +250,7 @@ public class SignUp extends javax.swing.JFrame {
         String email = tfEmail.getText().trim();
         String address = tfAddress.getText().trim();
         
-        if (ManageUser.isUsernameDuplicated(username) == true) {
+        if (confirmation.isUsernameDuplicated(username) == true) {
             return;
         };
         

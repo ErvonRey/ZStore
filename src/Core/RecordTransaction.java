@@ -10,9 +10,20 @@ import javax.swing.JOptionPane;
 
 public class RecordTransaction {
     
+    /*
+        On this class, this is soley for creating entries on the table
+        orders, and order_items on the database. This is also an example of encapsulation
+        principles.
+    */
+    
+    //variable for the reference id in this case its order id.
     private int orderID;
+    
+    //similar to the Functions class, this needs confirmations too, thus calling Confirmation class
     Confirmation confirm = new Confirmation();
     
+    //Similar to the method on Functions class the method generateUserID().
+    //this is so it can automatically generate the orderID.
     private void generateOrderID(){
         
         try (Connection connection = DBConnection.getConnection()) {
@@ -31,8 +42,15 @@ public class RecordTransaction {
         }
     }
     
+    /*
+        This is the method for adding an order, if the customer and clerk is successful at their transaction
+        their transaction will generate an ID in which it will use the same orderID in the addOrderItem to
+        identify the items were bought by this specific customer and was entertained by this specific clerk
+        also kept the total amount to save total money spent.
+    */
     public void addOrder(int customerID, int clerkID, double total){
         
+        //generates the orderID, increment one from the latest id.
         generateOrderID();
         
         try (Connection connection = DBConnection.getConnection()){
@@ -52,9 +70,14 @@ public class RecordTransaction {
         }
     }
     
+    /*
+        This method will be called repeatedly for each product, it is called on the ClerkPage. To be
+        more specific on the method checkOut(int clerkID, int customerID, double totalPrice);
+    */
     public void addOrderItem(int productID, int quantity){
         
-        if(confirm.isProductIDExisting(productID)==false) { return; };
+        //checking if the product exists. Just to catch any funny weird bugs
+        if(confirm.doesProductExist(productID)==false) { return; };
         
         try (Connection connection = DBConnection.getConnection()){
             String OrderItemSQL = "INSERT INTO order_items(order_id, product_id, orditem_quantity)"

@@ -23,14 +23,12 @@ public class AdminPage extends javax.swing.JFrame {
         loadData();
     }
     
+    //method for loading the data if the login page is called.
     private void loadData(){
         Data.fetchInformation(ManageUser.getCurrentUserID());
-        
         lName.setText(Data.getName());
         lEmail.setText(Data.getEmail());
         lAddress.setText(Data.getAddress());
-        
-        
     }
 
     /**
@@ -300,6 +298,7 @@ public class AdminPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSeeAdminsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeeAdminsActionPerformed
+        //This is to see the list of admins
         users.setModel(TableHandler.getAdminUsersTable());
         users.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         users.setRowSelectionAllowed(true);
@@ -307,7 +306,7 @@ public class AdminPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSeeAdminsActionPerformed
 
     private void btnSeeClerksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeeClerksActionPerformed
-        // TODO add your handling code here:
+        //This is to see the list of clerks
         users.setModel(TableHandler.getClerkUsersTable());
         users.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         users.setRowSelectionAllowed(true);
@@ -315,7 +314,7 @@ public class AdminPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSeeClerksActionPerformed
 
     private void btnSeeCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeeCustomersActionPerformed
-        // TODO add your handling code here:
+        //This is to see the list of customers
         users.setModel(TableHandler.getCustomerUsersTable());
         users.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         users.setRowSelectionAllowed(true);
@@ -323,6 +322,7 @@ public class AdminPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSeeCustomersActionPerformed
 
     private void rbSeePasswordItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSeePasswordItemStateChanged
+        //this method is for hiding the password and change it to star '*' if not selected.
         if (rbSeePassword.isSelected()) {
             tfPassword.setEchoChar((char) 0);
         } else {
@@ -331,6 +331,7 @@ public class AdminPage extends javax.swing.JFrame {
     }//GEN-LAST:event_rbSeePasswordItemStateChanged
 
     private void usersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usersMouseClicked
+        //This method will run every time the table users is clicked
         int selectedRow = users.getSelectedRow();
         
         if (selectedRow == -1) {
@@ -407,6 +408,10 @@ public class AdminPage extends javax.swing.JFrame {
     }//GEN-LAST:event_usersMouseClicked
 
     private void btnUpdateClerkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateClerkActionPerformed
+        /*
+            this method is for getting the information and then updating the users.
+            although, admins cannot update customers' data since only they can do that themselves.
+        */
         int userID;
         String name;
         String email;
@@ -422,6 +427,8 @@ public class AdminPage extends javax.swing.JFrame {
         Data.fetchInformation(userID);
         Functions function = new Functions();
         
+        //would send them to a different method per role
+        //role 0 = deleted users, role 1 = customers, role 2 = clerks, role 3 = admins.
         switch(Data.getRole()){
             case 0 -> {
                 JOptionPane.showMessageDialog(null, "Unable to update deleted user.");

@@ -8,6 +8,11 @@ import java.sql.ResultSet;
 
 public class Data {
     
+    /*
+        This class is for storing the data of a user. It is all private however it is static, though
+        it does still apply encapsulation as it hides the data or codes.
+    */
+    
     private static String username;
     private static String password;
     private static int role;
@@ -41,6 +46,7 @@ public class Data {
     //--customer -setter
     public static void setCustomerID(int tempCustomerID){ customerID = tempCustomerID; }
     
+    //getter for the whole information
     public static void fetchInformation(int userID){
         
         try (Connection connection = DBConnection.getConnection()){

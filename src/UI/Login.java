@@ -1,5 +1,6 @@
 package UI;
 
+import Core.Confirmation;
 import DatabaseConnection.DBConnection;
 import User.Data;
 import User.ManageUser;
@@ -7,7 +8,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Zumi
+ * @author Mellisa
  */
 public class Login extends javax.swing.JFrame {
     
@@ -18,8 +19,11 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
-        checkDBConnection();
+        checkDBConnection(); //for making sure in OOP since
     }
+    
+    //called the Confirmation class to confirm if the credentials are correct.
+    private Confirmation confirmation = new Confirmation();
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -136,6 +140,7 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    //to ensure or warn maam about the connection.
     private void checkDBConnection() {
         if (DBConnection.getConnection() == null) {
             
@@ -185,16 +190,18 @@ public class Login extends javax.swing.JFrame {
         lCreateAccount.setText("Create an account");
     }//GEN-LAST:event_lCreateAccountMouseExited
 
+    //if user will log in and will check if the account exists and the credentials are correct.
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String username = tfUsername.getText().trim();
         String password = tfPassword.getText().trim();
         
-        if (ManageUser.checkLogin(username, password) == true) {
+        if (confirmation.checkLogin(username, password) == true) {
             Data.fetchInformation(ManageUser.getCurrentUserID());
             int role = Data.getRole();
             switch (role) {
                 case 1 -> {
                     ManageUser.gettingCurrentCustomerID();
+                    //debugging.
 //                    System.out.println("Current user's customer id: " + ManageUser.getCurrentCustomerID());
                     CustomerPage customer = new CustomerPage();
                     customer.setExtendedState(CustomerPage.MAXIMIZED_BOTH);
@@ -203,6 +210,7 @@ public class Login extends javax.swing.JFrame {
                 }
                 case 2 -> {
                     ManageUser.gettingCurrentClerkID();
+                    //debugging
 //                    System.out.println("Current Clerk ID: " + ManageUser.getCurrentClerkID());
 //                    System.out.println("Current User ID: " + ManageUser.getCurrentUserID());
                     ClerkPage clerk = new ClerkPage();
@@ -220,12 +228,14 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
+    //create new account label
     private void lCreateAccountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lCreateAccountMouseClicked
         SignUp signUp = new SignUp();
         signUp.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_lCreateAccountMouseClicked
 
+    //this method is for hiding the password and change it to star '*' if not selected.
     private void rbSeePasswordItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSeePasswordItemStateChanged
         if (rbSeePassword.isSelected()) {
             tfPassword.setEchoChar((char) 0);

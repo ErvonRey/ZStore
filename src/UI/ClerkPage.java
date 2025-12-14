@@ -1,5 +1,6 @@
 package UI;
 
+//import here:
 import Core.CartItem;
 import Core.Confirmation;
 import Core.Functions;
@@ -22,8 +23,12 @@ public class ClerkPage extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ClerkPage.class.getName());
 
+    //Called the List<CartItem> so that it would save the item in the ArrayList, so I can save
+    //them in the memory.
     private List<CartItem> cart = new ArrayList<>();
+    //Called the Functions class because it needs the search for Customer and Product which is on the class Functions.
     private Functions function = new Functions();
+    //Called the Confirmation class because it also needs confirmation to see if the product exists or the user exists.
     private Confirmation confirm = new Confirmation();
     
     /**
@@ -31,14 +36,16 @@ public class ClerkPage extends javax.swing.JFrame {
      */
     public ClerkPage() {
         initComponents();
-        loadProductTable();
-        loadData();
+        loadProductTable(); //Loads the list of products on the left table.
+        loadData();         //Loads the name of the clerk
     }
 
+    //Just loads the clerks name
     private void loadData(){
         lClerk.setText(Data.getName());
     }
     
+    //Loads the list of products
     private void loadProductTable(){
         productList.setModel(TableHandler.getProductTable());
         productList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -46,6 +53,7 @@ public class ClerkPage extends javax.swing.JFrame {
         productList.setColumnSelectionAllowed(false);
     }
     
+    //refreshes the current basket or the cart the right table
     public void refreshCartTable() {
         
          DefaultTableModel model = new DefaultTableModel(
@@ -423,12 +431,13 @@ public class ClerkPage extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    //this method is to load all the list of products on the left table
     private void btnSeeAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeeAllActionPerformed
-        // TODO add your handling code here:
         loadProductTable();
         tfSearchProduct.setText("");
     }//GEN-LAST:event_btnSeeAllActionPerformed
 
+    //This is for searching a product, it will filter the products with the user's searched string
     private void tfSearchProductKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSearchProductKeyReleased
 
         String searchProduct = tfSearchProduct.getText().trim();
@@ -445,6 +454,7 @@ public class ClerkPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tfSearchProductKeyReleased
 
+    //adds the item to the cart (right table)
     private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
         
         int selectedRow = productList.getSelectedRow();
@@ -454,12 +464,12 @@ public class ClerkPage extends javax.swing.JFrame {
             return;
         }
 
-        // Grab data directly from the selected row
+        //grab the data directly from the selected row
         int selectedProductID = (int) productList.getValueAt(selectedRow, 0);      //product_id
         String selectedProductName = (String) productList.getValueAt(selectedRow, 1); //prod_name
         double selectedProductPrice = (double) productList.getValueAt(selectedRow, 2); //prod_price
 
-        //grabs the quantity from the textfield quantity
+        //grab the quantity from the textfield quantity
         int quantity;
         try {
             quantity = Integer.parseInt(tfQuantity.getText());
@@ -468,10 +478,10 @@ public class ClerkPage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Enter a valid quantity!");
             return;
         }
-        //code will run if the quantity is valid
         
+        //code will only run if the quantity is valid
         //check if the product selected is already in the item list
-        boolean itemIsAlreadyHere = false;
+        boolean itemIsAlreadyHere = false; //for checking if item already exists in the basket or cart
         
         for (CartItem item : cart) {
             if (item.getProductId() == selectedProductID) {
@@ -487,10 +497,11 @@ public class ClerkPage extends javax.swing.JFrame {
             cart.add(new CartItem(selectedProductID, selectedProductName, selectedProductPrice, quantity));
         }
         
-        // Refresh the JTable to show updated cart
+        //refreshes the table to show updated cart
         refreshCartTable();
     }//GEN-LAST:event_btnAddItemActionPerformed
 
+    //show the product information on the UI
     private void displayProductOnUI(int selectedProductID, String selectedProductName, double selectedProductPrice){
         String displayProductID = Integer.toString(selectedProductID);
         String displayProductName = selectedProductName;
@@ -501,6 +512,7 @@ public class ClerkPage extends javax.swing.JFrame {
         tfQuantity.setText("0");
     }
     
+    //for catching the clicks or the selected rows on the left table, or product table.
     private void productListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productListMouseClicked
         
         int selectedRow = productList.getSelectedRow();
@@ -514,9 +526,9 @@ public class ClerkPage extends javax.swing.JFrame {
         double selectedProductPrice = (double) productList.getValueAt(selectedRow, 2); //prod_price
         
         displayProductOnUI(selectedProductID, selectedProductName, selectedProductPrice);
-        
     }//GEN-LAST:event_productListMouseClicked
 
+    //clears the fields on the UI
     private void btnClearFieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearFieldsActionPerformed
         tfProductID.setText("");
         tfProductName.setText("");
@@ -524,27 +536,25 @@ public class ClerkPage extends javax.swing.JFrame {
         tfQuantity.setText("0");
     }//GEN-LAST:event_btnClearFieldsActionPerformed
 
+    //for catching the clicks or the selected rows on the right table, or basket or cart table.
     private void basketTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_basketTableMouseClicked
-        // TODO add your handling code here:
         int selectedRow = basketTable.getSelectedRow();
-
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a product first!");
             return;
         }
-
         //grab data directly from the selected row
         int selectedProductID = (int) basketTable.getValueAt(selectedRow, 0);      //product_id
         String selectedProductName = (String) basketTable.getValueAt(selectedRow, 1); //prod_name
         double selectedProductPrice = (double) basketTable.getValueAt(selectedRow, 2); //prod_price
         int quantity = (int) basketTable.getValueAt(selectedRow, 3);
-        
+        //display it
         displayProductOnUI(selectedProductID, selectedProductName, selectedProductPrice);
         tfQuantity.setText(Integer.toString(quantity));
     }//GEN-LAST:event_basketTableMouseClicked
-
+    
+    //remove the item from the basket or cart.
     private void btnDeleteItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteItemActionPerformed
-        // TODO add your handling code here:
         int selectedRow = basketTable.getSelectedRow(); //get the selected row in the basket table
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a product to remove!");
@@ -556,6 +566,7 @@ public class ClerkPage extends javax.swing.JFrame {
         refreshCartTable();
     }//GEN-LAST:event_btnDeleteItemActionPerformed
 
+    //updates the total amount for the whole purchase.
     public void updateCartTotals() {
         int totalQuantity = 0;
         double totalPrice = 0;
@@ -568,6 +579,7 @@ public class ClerkPage extends javax.swing.JFrame {
         lTotalQuantity.setText(String.valueOf(totalQuantity));
 }
     
+    //searching the customer name and see if they exist in the system
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         String searchCustomer = tfCustomerID.getText().trim();
         if (!searchCustomer.isEmpty()){ //code inside will run if field customer search is not empty
@@ -582,12 +594,12 @@ public class ClerkPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void basketTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_basketTablePropertyChange
-        // TODO add your handling code here:
         updateCartTotals();
     }//GEN-LAST:event_basketTablePropertyChange
 
+    //for checkout, it will call the RecordTransaction since it will save it on the database.
     public void checkOut(int clerkID, int customerID, double totalPrice){
-        //rest muna here is the last code
+        //rest muna here is the last code -- DONE
         RecordTransaction record = new RecordTransaction();
         record.addOrder(customerID, clerkID, totalPrice);
         for (CartItem item : cart) {
@@ -597,9 +609,10 @@ public class ClerkPage extends javax.swing.JFrame {
             );
         }
         
-        cart.clear(); //clears the arraylist of CartItem
+        //clears the arraylist of CartItem
+        cart.clear();
         
-        //refresh
+        //refresh everything
         refreshCartTable();
         loadProductTable();
         int totalQuantity = 0;
@@ -609,20 +622,19 @@ public class ClerkPage extends javax.swing.JFrame {
         lTotalQuantity.setText(String.valueOf(totalQuantity));
     }
     
+    //if the user clicks the checkout button
     private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
-        
         if (tfCheckoutCustomer.getText().trim().isEmpty() ||
             tfCash.getText().trim().isEmpty())
         {
             JOptionPane.showMessageDialog(null, "Please fill up the necessary information.");
             return;
         }
-        
         int customerID = Integer.parseInt(tfCheckoutCustomer.getText().trim());
         int clerkID = ManageUser.getCurrentClerkID();
         double cash = Double.parseDouble(tfCash.getText().trim());
         
-        if (confirm.isCustomerExisting(customerID) == false){
+        if (confirm.doesCustomerExist(customerID) == false){
             JOptionPane.showMessageDialog(null, "Customer with that ID does not exist.");
             return;
         }
@@ -645,12 +657,14 @@ public class ClerkPage extends javax.swing.JFrame {
             }
         }
         
+        //resets the UI texts.
         tfCheckoutCustomer.setText("");
         tfCustomerID.setText("");
         tfQuantity.setText("");
         tfCash.setText("");
     }//GEN-LAST:event_btnCheckoutActionPerformed
 
+    //logs the user out
     private void lLogOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lLogOutMouseClicked
         ManageUser.clearSession();
         Login login = new Login();
@@ -658,6 +672,7 @@ public class ClerkPage extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_lLogOutMouseClicked
 
+    //not used.
     private void lLogOutKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lLogOutKeyPressed
 
     }//GEN-LAST:event_lLogOutKeyPressed
