@@ -206,14 +206,14 @@ public class Functions {
         }
     }
     
-    public void updateProduct(int theCurrentProduct, int changeToProductID, String productName, double price){
+    public void updateProduct(int oldProductID, int newProductID, String newProductName, double newProductPrice){
         try (Connection connection = DBConnection.getConnection()){
             String productSQL = "UPDATE products SET product_id = ?, prod_name = ?, prod_price = ? WHERE product_id = ?";
             PreparedStatement updateProduct = connection.prepareStatement(productSQL);
-            updateProduct.setInt(1, changeToProductID);
-            updateProduct.setString(2, productName);
-            updateProduct.setDouble(3, price);
-            updateProduct.setDouble(4, theCurrentProduct);
+            updateProduct.setInt(1, newProductID);
+            updateProduct.setString(2, newProductName);
+            updateProduct.setDouble(3, newProductPrice);
+            updateProduct.setDouble(4, oldProductID);
             updateProduct.executeUpdate();
             String message = "Successfully updated a product!";
             JOptionPane.showMessageDialog(null, message, "Product Update", JOptionPane.INFORMATION_MESSAGE);
@@ -281,6 +281,18 @@ public class Functions {
             System.out.println("Error on database method(clearPurchaseHistory): " + e.getMessage());
         }
     }
+    
+    public void deleteProduct(int productID) {
+        try (Connection connection = DBConnection.getConnection()) {
+            String sql = "DELETE FROM products WHERE product_id = ?;";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Successfully deleted product with the ID: " + productID);
+            } catch (SQLException e) {
+            System.out.println("Error on database method(deleteProduct): " + e.getMessage());
+        }
+    }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Methods for SEARCHING data on the database">
@@ -296,7 +308,6 @@ public class Functions {
         PreparedStatement ps = connection.prepareStatement(sql);
         
         ps.setString(1, customerName);
-        
         ResultSet rs = ps.executeQuery();
         
         StringBuilder results = new StringBuilder();
@@ -336,24 +347,74 @@ public class Functions {
             
             StringBuilder results = new StringBuilder();
         
-        while (rs.next()) {
-            
-            int tempCustomerID = rs.getInt("customer_id");
-            String name = rs.getString("cus_name");
+            while (rs.next()) {
 
-            results.append("Name: ").append(name)
-                   .append(" -=- Customer ID: ").append(tempCustomerID)
-                   .append("\n");
+                int tempCustomerID = rs.getInt("customer_id");
+                String name = rs.getString("cus_name");
+
+                results.append("Name: ").append(name)
+                       .append(" -=- Customer ID: ").append(tempCustomerID)
+                       .append("\n");
+                }
+
+            if (results.length() == 0) {
+                JOptionPane.showMessageDialog(null, "No customers found with the ID: " + customerID);
+            } else {
+                JOptionPane.showMessageDialog(null, results.toString(), "Search Results", JOptionPane.INFORMATION_MESSAGE);
             }
-
-        if (results.length() == 0) {
-            JOptionPane.showMessageDialog(null, "No customers found with the ID: " + customerID);
-        } else {
-            JOptionPane.showMessageDialog(null, results.toString(), "Search Results", JOptionPane.INFORMATION_MESSAGE);
-        }
         
         } catch (SQLException e) {
             System.out.println("Error fetching customer data: " + e);
+        }
+    }
+    
+    public Items searchProduct(int productID){
+        String productName = "";
+        double productPrice = -1;
+        if (!confirm.doesProductExist(productID)){
+            return null;
+        }
+        try(Connection connection = DBConnection.getConnection()){
+            String sql = "SELECT * FROM products WHERE product_id = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                productName = rs.getString("prod_name");
+                productPrice = rs.getDouble("prod_price");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching product method(search product): " + e);
+        }
+        return new Items(productID, productName, productPrice);
+    }
+    
+    public void showProductsByName(String productName){
+        try (Connection connection = DBConnection.getConnection()){
+            String sql = "SELECT * FROM products\n" +
+                        "WHERE prod_name LIKE CONCAT('%', ?, '%');";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, productName);
+            ResultSet rs = ps.executeQuery();
+            StringBuilder results = new StringBuilder();
+        
+            while (rs.next()) {
+            
+                int tempProductID = rs.getInt("product_id");
+                String tempProductName = rs.getString("prod_name");
+
+                results.append("Product Name: ").append(tempProductName)
+                       .append(" --- ID: ").append(tempProductID)
+                       .append("\n");
+            }
+
+            if (results.length() == 0) {
+                JOptionPane.showMessageDialog(null, "No product found with name: " + productName);
+            } else {
+                JOptionPane.showMessageDialog(null, results.toString(), "Search Results", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching product data: " + e);
         }
     }
     // </editor-fold>

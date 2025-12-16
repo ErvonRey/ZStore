@@ -1,6 +1,8 @@
 package UI;
 
+import Core.Confirmation;
 import Core.Functions;
+import Core.Items;
 import Core.TableHandler;
 import User.Data;
 import User.ManageUser;
@@ -22,6 +24,11 @@ public class AdminPage extends javax.swing.JFrame {
         initComponents();
         loadData();
     }
+    
+    //called Functions for the basic CRUD of product and also updating of clerk or admins
+    Functions function = new Functions();
+    //called Confirmation for the updating of product
+    Confirmation confirm = new Confirmation();
     
     //method for loading the data if the login page is called.
     private void loadData(){
@@ -54,11 +61,14 @@ public class AdminPage extends javax.swing.JFrame {
         btnSeeClerks = new javax.swing.JButton();
         btnSeeAdmins = new javax.swing.JButton();
         btnSeeCustomers = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         lRoleInformation = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         tfAddress = new javax.swing.JTextField();
+        tfProductID = new javax.swing.JTextField();
         tfUserID = new javax.swing.JTextField();
         tfEmail = new javax.swing.JTextField();
         rbSeePassword = new javax.swing.JRadioButton();
@@ -67,6 +77,15 @@ public class AdminPage extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         tfName = new javax.swing.JTextField();
         btnUpdateClerk = new javax.swing.JButton();
+        tfProductName = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        tfProductPrice = new javax.swing.JTextField();
+        btnUpdateProduct = new javax.swing.JButton();
+        btnSeeProducts = new javax.swing.JButton();
+        btnSearchProduct = new javax.swing.JButton();
+        btnAddProduct = new javax.swing.JButton();
+        btnDeleteProduct = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Admin Page");
@@ -199,6 +218,20 @@ public class AdminPage extends javax.swing.JFrame {
         panelBG.add(btnSeeCustomers);
         btnSeeCustomers.setBounds(490, 730, 160, 30);
 
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel7.setText("Product ID:");
+        panelBG.add(jLabel7);
+        jLabel7.setBounds(920, 530, 110, 40);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Update Product:");
+        panelBG.add(jLabel2);
+        jLabel2.setBounds(870, 480, 150, 40);
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -230,6 +263,10 @@ public class AdminPage extends javax.swing.JFrame {
         tfAddress.setEnabled(false);
         panelBG.add(tfAddress);
         tfAddress.setBounds(1030, 290, 350, 30);
+
+        tfProductID.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        panelBG.add(tfProductID);
+        tfProductID.setBounds(1030, 530, 350, 40);
 
         tfUserID.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         tfUserID.setEnabled(false);
@@ -280,7 +317,74 @@ public class AdminPage extends javax.swing.JFrame {
             }
         });
         panelBG.add(btnUpdateClerk);
-        btnUpdateClerk.setBounds(1030, 420, 350, 40);
+        btnUpdateClerk.setBounds(1030, 390, 350, 40);
+
+        tfProductName.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        panelBG.add(tfProductName);
+        tfProductName.setBounds(1030, 580, 350, 40);
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("Name:");
+        panelBG.add(jLabel8);
+        jLabel8.setBounds(920, 580, 110, 40);
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Price:");
+        panelBG.add(jLabel9);
+        jLabel9.setBounds(920, 630, 110, 40);
+
+        tfProductPrice.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        panelBG.add(tfProductPrice);
+        tfProductPrice.setBounds(1030, 630, 350, 40);
+
+        btnUpdateProduct.setText("Update Product");
+        btnUpdateProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateProductActionPerformed(evt);
+            }
+        });
+        panelBG.add(btnUpdateProduct);
+        btnUpdateProduct.setBounds(1390, 630, 130, 40);
+
+        btnSeeProducts.setText("See Products");
+        btnSeeProducts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSeeProductsActionPerformed(evt);
+            }
+        });
+        panelBG.add(btnSeeProducts);
+        btnSeeProducts.setBounds(1390, 580, 130, 40);
+
+        btnSearchProduct.setText("Search Product ID");
+        btnSearchProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchProductActionPerformed(evt);
+            }
+        });
+        panelBG.add(btnSearchProduct);
+        btnSearchProduct.setBounds(1390, 530, 130, 40);
+
+        btnAddProduct.setText("Add Product");
+        btnAddProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddProductActionPerformed(evt);
+            }
+        });
+        panelBG.add(btnAddProduct);
+        btnAddProduct.setBounds(1030, 680, 160, 40);
+
+        btnDeleteProduct.setText("Delete Product");
+        btnDeleteProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteProductActionPerformed(evt);
+            }
+        });
+        panelBG.add(btnDeleteProduct);
+        btnDeleteProduct.setBounds(1220, 680, 160, 40);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -425,7 +529,6 @@ public class AdminPage extends javax.swing.JFrame {
         password = tfPassword.getText().trim();
         
         Data.fetchInformation(userID);
-        Functions function = new Functions();
         
         //would send them to a different method per role
         //role 0 = deleted users, role 1 = customers, role 2 = clerks, role 3 = admins.
@@ -449,6 +552,129 @@ public class AdminPage extends javax.swing.JFrame {
         function.updateUser(userID, password);
         JOptionPane.showMessageDialog(null, "Successfully updated selected user's information.");
     }//GEN-LAST:event_btnUpdateClerkActionPerformed
+
+    private void btnSearchProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchProductActionPerformed
+        Items item = null;
+        String tempProductID = tfProductID.getText().trim();
+        if (!tempProductID.isEmpty()) {
+            try {
+                int productID = Integer.parseInt(tempProductID);
+                item = function.searchProduct(productID);
+                if (item != null) {//just in case if the product doesn't exist
+                    JOptionPane.showMessageDialog(null, "Product exists, getting information...");
+                    tfProductName.setText(item.getProductName());
+                    tfProductPrice.setText(Double.toString(item.getProductPrice()));
+                } else {
+                    tfProductID.setText("");
+                    tfProductName.setText("");
+                    tfProductPrice.setText("");
+                }
+            } catch (NumberFormatException e) {
+                tfProductID.setText("");
+                tfProductName.setText("");
+                tfProductPrice.setText("");
+                JOptionPane.showMessageDialog(null, "Please enter a valid number for Product ID.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Fill the product ID with valid values.");
+        }
+    }//GEN-LAST:event_btnSearchProductActionPerformed
+
+    private void btnAddProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProductActionPerformed
+        int productID;
+        String productName;
+        double productPrice;
+        try {
+            productID = Integer.parseInt(tfProductID.getText().trim());
+            productName = tfProductName.getText().trim();
+            productPrice = Double.parseDouble(tfProductPrice.getText().trim());
+            if (tfProductID.getText().trim().isEmpty() || tfProductName.getText().trim().isEmpty() || tfProductPrice.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Please fill required fields of the product.");
+            return;
+            }
+        function.addProduct(productID, productName, productPrice);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Invalid values on the fields, please follow the format.");
+        }
+    }//GEN-LAST:event_btnAddProductActionPerformed
+
+    private void btnSeeProductsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeeProductsActionPerformed
+        String productName = tfProductName.getText().trim();
+        if (!tfProductName.getText().trim().isEmpty()){
+            function.showProductsByName(productName);
+        } else {
+            JOptionPane.showMessageDialog(null, "Fill the product name field with valid values.");
+            tfProductID.setText("");
+            tfProductName.setText("");
+            tfProductPrice.setText("");
+        }
+    }//GEN-LAST:event_btnSeeProductsActionPerformed
+
+    private void btnDeleteProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteProductActionPerformed
+        int productID;
+        String productName;
+        double productPrice;
+        try {
+            productID = Integer.parseInt(tfProductID.getText().trim());
+            productName = tfProductName.getText().trim();
+            productPrice = Double.parseDouble(tfProductPrice.getText().trim());
+            if (tfProductID.getText().trim().isEmpty() || tfProductName.getText().trim().isEmpty() || tfProductPrice.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Please fill required fields of the product.");
+            return;
+            }
+        function.deleteProduct(productID);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Invalid values on the fields, please follow the format.");
+        }
+    }//GEN-LAST:event_btnDeleteProductActionPerformed
+
+    private void btnUpdateProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateProductActionPerformed
+        // Check if fields are empty first
+        if (tfProductID.getText().trim().isEmpty() ||
+            tfProductName.getText().trim().isEmpty() ||
+            tfProductPrice.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please fill all the required fields.");
+            return;
+        }
+
+        int oldProductID;
+        double newPrice;
+        String newName = tfProductName.getText().trim();
+
+        //parsing Product ID and Price
+        try {
+            oldProductID = Integer.parseInt(tfProductID.getText().trim());
+            newPrice = Double.parseDouble(tfProductPrice.getText().trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Please enter valid numbers for Product ID and Price.");
+            return;
+        }
+        
+        if(!confirm.doesProductExist(oldProductID)){
+            JOptionPane.showMessageDialog(null, "The product ID does not exist, make sure you have to correct one.");
+            tfProductID.setText("");
+            tfProductName.setText("");
+            tfProductPrice.setText("");
+            return;
+        }
+
+        //ask for new Product ID using showInputDialog from JOptionPane
+        String input = JOptionPane.showInputDialog(null, "Enter its new Product ID:");
+        if (input != null) {
+            input = input.trim();
+            if (!input.isEmpty()) {
+                try {
+                    int newProductID = Integer.parseInt(input);
+                    function.updateProduct(oldProductID, newProductID, newName, newPrice);
+                    JOptionPane.showMessageDialog(null, "Product updated successfully!");
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Invalid input! Please enter a valid number for the new Product ID.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "You didn't enter anything! Action cancelled.");
+            }
+        }
+    }//GEN-LAST:event_btnUpdateProductActionPerformed
 
     /**
      * @param args the command line arguments
@@ -476,15 +702,24 @@ public class AdminPage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddProduct;
+    private javax.swing.JButton btnDeleteProduct;
+    private javax.swing.JButton btnSearchProduct;
     private javax.swing.JButton btnSeeAdmins;
     private javax.swing.JButton btnSeeClerks;
     private javax.swing.JButton btnSeeCustomers;
+    private javax.swing.JButton btnSeeProducts;
     private javax.swing.JButton btnUpdateClerk;
+    private javax.swing.JButton btnUpdateProduct;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lAddress;
     private javax.swing.JLabel lAddressText;
@@ -501,6 +736,9 @@ public class AdminPage extends javax.swing.JFrame {
     private javax.swing.JTextField tfEmail;
     private javax.swing.JTextField tfName;
     private javax.swing.JPasswordField tfPassword;
+    private javax.swing.JTextField tfProductID;
+    private javax.swing.JTextField tfProductName;
+    private javax.swing.JTextField tfProductPrice;
     private javax.swing.JTextField tfUserID;
     private javax.swing.JTable users;
     // End of variables declaration//GEN-END:variables

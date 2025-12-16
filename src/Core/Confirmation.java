@@ -77,8 +77,8 @@ public class Confirmation {
             if (result.next()){
                 return true;
             } else {
-                String errorMessage = "The product " + productID + " does not exist.";
-                JOptionPane.showMessageDialog(null, errorMessage, "Order Request", JOptionPane.ERROR_MESSAGE);
+                String errorMessage = "The product " + productID + " does not exist in the system.";
+                JOptionPane.showMessageDialog(null, errorMessage, "Product Search", JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException e) {
             System.out.println("Error on method doesProductExist: " + e);

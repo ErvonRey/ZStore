@@ -9,14 +9,14 @@ public class CartItem {
     */
 
     //variables
-    private int productId;
+    private int productID;
     private String productName;
     private double price;
     private int quantity;
     
     //the constructor to store the information of the item
-    public CartItem(int productId, String productName, double price, int quantity) {
-        this.productId = productId;
+    public CartItem(int productID, String productName, double price, int quantity) {
+        this.productID = productID;
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
@@ -24,7 +24,7 @@ public class CartItem {
     
     //the getters
     public int getProductId() {
-        return productId;
+        return productID;
     }
 
     public String getProductName() {
@@ -41,7 +41,7 @@ public class CartItem {
 
     //setter for updating the item
     public void setProductId(int productId) {
-        this.productId = productId;
+        this.productID = productId;
     }
 
     public void setProductName(String productName) {

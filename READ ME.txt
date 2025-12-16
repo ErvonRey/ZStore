@@ -1,0 +1,8 @@
+Hello good morning,
+
+This project is for the submission of the subject Object-Oriented Programming (OOP).
+The title of this system is called ZStore, it is to manage a store in which is used like an all
+in one POS system, purchase tracker for customers and admins.
+
+The database data and imports are contained in the file "Important Files"
+it can be imported into MySQL workbench for easy and convenient imports.
